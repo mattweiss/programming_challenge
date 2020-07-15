@@ -1,10 +1,20 @@
+from dag_node import dagNode
 from dag import DAG
 
 from pdb import set_trace as st
 
 # arc dictionary
-node_dict = {
-    'A':{'arcs':['B','C','D'],'supported':True},
+lt_node_dict = {
+    'A':{'arcs':['B'],'supported':True,'input':True},
+    'B':{'arcs':['C','D'],'supported':False},
+    'C':{'arcs':['F'],'supported':True},
+    'D':{'arcs':['E'],'supported':False},
+    'E':{'arcs':['F'],'supported':True},
+    'F':{'arcs':[None],'supported':True,'output':True},
+}
+
+rd_node_dict = {
+    'A':{'arcs':['B','C','D'],'supported':True,'input':True},
     'B':{'arcs':['E','F'],'supported':False},
     'C':{'arcs':['E','F'],'supported':False},
     'D':{'arcs':['K'],'supported':True},
@@ -14,17 +24,31 @@ node_dict = {
     'H':{'arcs':['K'],'supported':True},
     'I':{'arcs':[None],'supported':True},
     'J':{'arcs':['K'],'supported':False},
-    'K':{'arcs':[None],'supported':False},
+    'K':{'arcs':[None],'supported':False,'output':True},
 }
 
-# input and output nodes
-input_node = 'A'
-output_node = 'K'
+node_dict = rd_node_dict
 
 # Build graph
-graph = DAG(node_dict,input_node,output_node)
+graph = DAG(node_dict)
 
+# check paths
+# for start_node in node_dict.keys():
+
+#     for end_node in node_dict.keys():
+
+#         if graph.pathExists(start_node,end_node):
+        
+#             print(start_node,end_node,graph.pathExists(start_node,end_node))
+        
 # Partition graph
-node_set_list = graph.partitionGraph()
-print(node_set_list)
+graph.partition()
 
+for subgraph in graph.getSubgraphs():
+
+    print(subgraph.getNodes().keys())
+
+# Merge subgraphs
+graph.merge()
+print(graph.getNodes().keys())
+st()

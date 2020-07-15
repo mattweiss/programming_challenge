@@ -1,4 +1,4 @@
-from node import Node
+from dag_node import dagNode
 import itertools
 from pdb import set_trace as st
 
@@ -21,53 +21,63 @@ class DAG():
     Attributes:
 
         _nodes: Dictionary of node objects
-        _inputNode: Name of input node
-        _outputNode: Name of output node
         _subgraphs: list of partitioned subgraphs
+        _partitioned: Boolean indicate whether graph is in partitioned state or not
 
     Methods:
 
-        getNodes: Returns list of node objects
-        getInputNode: Returns input node name
-        getOutputNode: Returns output node name
+        getNodes: Returns dictionary of node objects
+        getSubgraphs: Returns list of subgraphs
+        setNode: Adds node to _nodes dictionary
+
+        isPartitioned: Returns Boolean indicating whether graph is partitioned or not
+
         pathExists(start_node,end_node): Determine if path exists between two nodes
-        partitionGraph(): Generate list of subgraphs partitioned into entirely supported or unsupported nodes
+        
+        partition: Generate list of subgraphs partitioned into entirely supported or unsupported nodes
+        merge: Merge subgraphs into single graph
+
+        nodeConnections: Group supported or unsupported nodes by subgraphs
 
     """
 
     def __init__(self,
-                 node_data=None,
-                 inputNode=None,
-                 outputNode=None):
-
-        assert node_data is not None
-        assert inputNode is not None
-        assert outputNode is not None
-
-        self._inputNode = inputNode
-        self._outputNode = outputNode
+                 node_data=None):
 
         self._nodes = dict()
+        self._subgraphs = list()
+        self._partitioned = False
         
-        # populate nodes list
-        for node_name, node_attrs in node_data.items():
+        # populate nodes list if not node_data is not None
+        # Otherwise, nodes can be added directly via method setNode()
+        try:
+
+            for node_name, node_attrs in node_data.items():
             
-            self._nodes[node_name] = Node(name=node_name,
-                                          arcs=node_attrs['arcs'],
-                                          supported=node_attrs['supported'])
-        
+                self._nodes[node_name] = dagNode(name=node_name,**node_attrs)
+
+        except:
+
+            pass
+                
     def getNodes(self):
 
         return self._nodes
 
-    def getInputNode(self):
+    def getSubgraphs(self):
 
-        return self._inputNode
+        return self._subgraphs
 
-    def getOutputNode(self):
+    def setNode(self,node):
 
-        return self._outputNode
-    
+        assert node is not None
+
+        self._nodes[node.getName()] = node
+
+    def isPartitioned(self):
+
+        return self._partitioned
+        
     def pathExists(self,start_node=None,end_node=None,dead_arcs=[]):
 
         """
@@ -92,8 +102,13 @@ class DAG():
 
         return path_exists
 
-    def partitionGraph(self):
+    def partition(self):
 
+        if self._partitioned is True:
+
+            print('Graph is already partitioned')
+            return
+        
         # separate supported and unsupported nodes
         supported_nodes = dict()
         unsupported_nodes = dict()
@@ -108,17 +123,48 @@ class DAG():
 
                 unsupported_nodes[node_name] = node
 
-        supported_sets = self.nodeConnections(supported_nodes,unsupported_nodes)
-        unsupported_sets = self.nodeConnections(unsupported_nodes,supported_nodes)
+        subgraph_sets = self.nodeConnections(supported_nodes,unsupported_nodes) + \
+                        self.nodeConnections(unsupported_nodes,supported_nodes)
+
+        # build partitions
+        for subgraph in subgraph_sets:
+
+            # create new subgraph
+            self._subgraphs.append(DAG())
+
+            # for each node pop node object from _nodes and add to subgraph
+            for node in subgraph:
+
+                self._subgraphs[-1].setNode(self._nodes.pop(node))
+
+        # set partitioned state to true
+        self._partitioned = True
+
+    def merge(self):
+
+        if self._partitioned is False:
+
+            print('Graph is not partitioned')
+            return
+
+        # loop over subgraphs, adding each to _nodes and removing from subgraph
+        for subgraph in self._subgraphs:
+
+            for node_name, node in subgraph.getNodes().items():
+
+                self._nodes[node_name] = node
+
+        # set partitioned state to false
+        self._partitioned = False
+        
+        # reset _subgraphs
+        self._subgraphs = list()
                 
-        return node_set_list
-
-
     def nodeConnections(self,nodes,dead_arcs):
 
         node_set_list = list()
-        
-        # find connections between supported nodes
+
+        # find connections between nodes
         for start_node in nodes.keys():
 
             node_set = set(start_node)
