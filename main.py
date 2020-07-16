@@ -30,7 +30,7 @@ rd_node_dict = {
 node_dict = rd_node_dict
 
 # Build graph
-graph = DAG(node_dict)
+dag = DAG(node_dict)
 
 # check paths
 # for start_node in node_dict.keys():
@@ -42,13 +42,13 @@ graph = DAG(node_dict)
 #             print(start_node,end_node,graph.pathExists(start_node,end_node))
         
 # Partition graph
-graph.partition()
+dag.partition()
 
-for subgraph in graph.getSubgraphs():
+for subgraph in dag.getSubgraphs():
 
     print(subgraph.getNodes().keys())
 
 # Merge subgraphs
-graph.merge()
-print(graph.getNodes().keys())
+dag.merge()
+print(dag.getNodes().keys())
 st()
