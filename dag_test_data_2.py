@@ -1,0 +1,315 @@
+dag_dict = {
+    'A':{'arcs':['B','C','D'],'supported':True,'input':True,'output':False},
+    'B':{'arcs':['E','F'],'supported':False,'input':False,'output':False},
+    'C':{'arcs':['E','F'],'supported':False,'input':False,'output':False},
+    'D':{'arcs':['K'],'supported':True,'input':False,'output':False},
+    'E':{'arcs':['G'],'supported':False,'input':False,'output':False},
+    'F':{'arcs':['E','G','H','I'],'supported':True,'input':False,'output':False},
+    'G':{'arcs':['J'],'supported':True,'input':False,'output':False},
+    'H':{'arcs':['K'],'supported':True,'input':False,'output':False},
+    'I':{'arcs':[None],'supported':True,'input':False,'output':False},
+    'J':{'arcs':['K'],'supported':False,'input':False,'output':False},
+    'K':{'arcs':[None],'supported':False,'input':False,'output':True},
+}
+
+pathExists_dict = {
+
+    # A
+    'AA':False,
+    'AB':True,
+    'AC':True,
+    'AD':True,
+    'AE':True,
+    'AF':True,
+    'AG':True,
+    'AH':True,
+    'AI':True,
+    'AJ':True,
+    'AK':True,
+
+    # B
+    'BA':False,
+    'BB':False,
+    'BC':False,
+    'BD':False,
+    'BE':True,
+    'BF':True,
+    'BG':True,
+    'BH':True,
+    'BI':True,
+    'BJ':True,
+    'BK':True,
+
+    # C
+    'CA':False,
+    'CB':False,
+    'CC':False,
+    'CD':False,
+    'CE':True,
+    'CF':True,
+    'CG':True,
+    'CH':True,
+    'CI':True,
+    'CJ':True,
+    'CK':True,
+
+    # D
+    'DA':False,
+    'DB':False,
+    'DC':False,
+    'DD':False,
+    'DE':False,
+    'DF':False,
+    'DG':False,
+    'DH':False,
+    'DI':False,
+    'DJ':False,
+    'DK':True,
+
+    # E
+    'EA':False,
+    'EB':False,
+    'EC':False,
+    'ED':False,
+    'EE':False,
+    'EF':False,
+    'EG':True,
+    'EH':False,
+    'EI':False,
+    'EJ':True,
+    'EK':True,
+
+    # F
+    'FA':False,
+    'FB':False,
+    'FC':False,
+    'FD':False,
+    'FE':True,
+    'FF':False,
+    'FG':True,
+    'FH':True,
+    'FI':True,
+    'FJ':True,
+    'FK':True,
+    
+    # G
+    'GA':False,
+    'GB':False,
+    'GC':False,
+    'GD':False,
+    'GE':False,
+    'GF':False,
+    'GG':False,
+    'GH':False,
+    'GI':False,
+    'GJ':True,
+    'GK':True,
+
+    # H
+    'HA':False,
+    'HB':False,
+    'HC':False,
+    'HD':False,
+    'HE':False,
+    'HF':False,
+    'HG':False,
+    'HH':False,
+    'HI':False,
+    'HJ':False,
+    'HK':True,
+
+    # I
+    'IA':False,
+    'IB':False,
+    'IC':False,
+    'ID':False,
+    'IE':False,
+    'IF':False,
+    'IG':False,
+    'IH':False,
+    'II':False,
+    'IJ':False,
+    'IK':False,
+
+    # J
+    'JA':False,
+    'JB':False,
+    'JC':False,
+    'JD':False,
+    'JE':False,
+    'JF':False,
+    'JG':False,
+    'JH':False,
+    'JI':False,
+    'JJ':False,
+    'JK':True,
+
+    # K
+    'KA':False,
+    'KB':False,
+    'KC':False,
+    'KD':False,
+    'KE':False,
+    'KF':False,
+    'KG':False,
+    'KH':False,
+    'KI':False,
+    'KJ':False,
+    'KK':False,
+}
+
+pathExists_supported_dict = {
+
+    # A
+    'AA':False,
+    'AB':False,
+    'AC':False,
+    'AD':True,
+    'AE':False,
+    'AF':False,
+    'AG':False,
+    'AH':False,
+    'AI':False,
+    'AJ':False,
+    'AK':False,
+
+    # D
+    'DA':False,
+    'DB':False,
+    'DC':False,
+    'DD':False,
+    'DE':False,
+    'DF':False,
+    'DG':False,
+    'DH':False,
+    'DI':False,
+    'DJ':False,
+    'DK':False,
+
+    # F
+    'FA':False,
+    'FB':False,
+    'FC':False,
+    'FD':False,
+    'FE':False,
+    'FF':False,
+    'FG':True,
+    'FH':True,
+    'FI':True,
+    'FJ':True,
+    'FK':False,
+    
+    # G
+    'GA':False,
+    'GB':False,
+    'GC':False,
+    'GD':False,
+    'GE':False,
+    'GF':False,
+    'GG':False,
+    'GH':False,
+    'GI':False,
+    'GJ':False,
+    'GK':False,
+
+    # H
+    'HA':False,
+    'HB':False,
+    'HC':False,
+    'HD':False,
+    'HE':False,
+    'HF':False,
+    'HG':False,
+    'HH':False,
+    'HI':False,
+    'HJ':False,
+    'HK':False,
+
+    # I
+    'IA':False,
+    'IB':False,
+    'IC':False,
+    'ID':False,
+    'IE':False,
+    'IF':False,
+    'IG':False,
+    'IH':False,
+    'II':False,
+    'IJ':False,
+    'IK':False,
+    
+}
+
+pathExists_unsupported_dict = {
+
+    # B
+    'BA':False,
+    'BB':False,
+    'BC':False,
+    'BD':False,
+    'BE':True,
+    'BF':False,
+    'BG':False,
+    'BH':False,
+    'BI':False,
+    'BJ':False,
+    'BK':False,
+
+    # C
+    'CA':False,
+    'CB':False,
+    'CC':False,
+    'CD':False,
+    'CE':True,
+    'CF':False,
+    'CG':False,
+    'CH':False,
+    'CI':False,
+    'CJ':False,
+    'CK':False,
+
+    # E
+    'EA':False,
+    'EB':False,
+    'EC':False,
+    'ED':False,
+    'EE':False,
+    'EF':False,
+    'EG':False,
+    'EH':False,
+    'EI':False,
+    'EJ':False,
+    'EK':False,
+
+    # J
+    'JA':False,
+    'JB':False,
+    'JC':False,
+    'JD':False,
+    'JE':False,
+    'JF':False,
+    'JG':False,
+    'JH':False,
+    'JI':False,
+    'JJ':False,
+    'JK':True,
+
+    # K
+    'KA':False,
+    'KB':False,
+    'KC':False,
+    'KD':False,
+    'KE':False,
+    'KF':False,
+    'KG':False,
+    'KH':False,
+    'KI':False,
+    'KJ':False,
+    'KK':False,
+
+}
+
+supported_node_connections = [{'A','D'}, {'F','G','H','I'}]
+unsupported_node_connections = [{'B','C','E'}, {'J','K'}]
+
+subgraphs_list = supported_node_connections + unsupported_node_connections

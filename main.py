@@ -27,28 +27,26 @@ rd_node_dict = {
     'K':{'arcs':[None],'supported':False,'output':True},
 }
 
-node_dict = rd_node_dict
+my_node_dict = {
+    'A':{'arcs':['B'],'supported':True},
+    'B':{'arcs':['C'],'supported':False},
+    'C':{'arcs':['D'],'supported':False},
+    'D':{'arcs':[None],'supported':True},
+    # 'E':{'arcs':[None],'supported':True},
+}
+
+node_dict = lt_node_dict
 
 # Build graph
 dag = DAG(node_dict)
 
 # check paths
-# for start_node in node_dict.keys():
+for start_node in node_dict.keys():
 
-#     for end_node in node_dict.keys():
+    for end_node in node_dict.keys():
 
-#         if graph.pathExists(start_node,end_node):
-        
-#             print(start_node,end_node,graph.pathExists(start_node,end_node))
-        
-# Partition graph
-dag.partition()
+        print(start_node,end_node,dag.pathExists(start_node,end_node))
 
-for subgraph in dag.getSubgraphs():
-
-    print(subgraph.getNodes().keys())
-
-# Merge subgraphs
-dag.merge()
-print(dag.getNodes().keys())
-st()
+# start_node = 'A'
+# end_node = 'K'
+# print(start_node,end_node,dag.pathExists(start_node,end_node))

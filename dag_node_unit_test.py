@@ -9,26 +9,18 @@ from pdb import set_trace as st
 # User input
 ############
 
-# name of node test file
-test_file='node1.dat'
+# dictionaries used for testing
+from dag_node_test_data_1 import node_dict
 
 ################
 # End user Input
 ################
 
-# open node test file
-with open('unittests/'+test_file, 'r') as f:
-
-    node_dict = ast.literal_eval(f.read())
-
-# extract node name and attributes
-node_name = next(iter(node_dict))
+node_name = list(node_dict.keys())[0]
 node_attrs = node_dict[node_name]
 
 print('\n########################')
 print('Class dagNode Unit Test')
-print('Node Name: {node_name}'.format(node_name=node_name))
-print('Node Attributes: {node_attrs}'.format(node_attrs=node_attrs))
 print('########################\n')
 
 class dagNodeUnitTest(unittest.TestCase):
@@ -45,11 +37,11 @@ class dagNodeUnitTest(unittest.TestCase):
 
     Methods:
 
-        test_getName(): tests getName
-        test_getArcs(): tests getArcs
-        test_isSupported(): tests isSupported
-        test_isInput(): tests isInput
-        test_isOnput(): test isOutput
+        test_getName
+        test_getArcs
+        test_isSupported
+        test_isInput
+        test_isOnput
 
     """
 

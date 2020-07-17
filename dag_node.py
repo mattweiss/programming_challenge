@@ -16,11 +16,11 @@ class dagNode():
 
     Attributes:
 
-        _name: Unique name of node
-        _arcs: list of arcs
-        _supported: Boolean indicating whether node is supported or not
-        _input: Boolean indicating whether node is input node
-        _output: Boolean indicating whether node is output node
+        name: Unique name of node
+        arcs: list of arcs
+        supported: Boolean indicating whether node is supported or not
+        input: Boolean indicating whether node is input node
+        output: Boolean indicating whether node is output node
 
     Methods:
 
@@ -41,28 +41,32 @@ class dagNode():
 
         assert name is not None
         
-        self._name = name
-        self._arcs = arcs
-        self._supported = supported
-        self._input = input
-        self._output = output
+        self.name = name
+        self.arcs = arcs
+        self.supported = supported
+        self.input = input
+        self.output = output
 
+    #############
+    # Get Methods
+    #############
+    
     def getName(self):
 
-        return self._name
+        return self.name
 
     def getArcs(self):
 
-        return self._arcs
+        return self.arcs
 
     def isSupported(self):
 
-        return self._supported
+        return self.supported
     
     def isInput(self):
 
-        return self._input
+        return self.input
 
     def isOutput(self):
 
-        return self._output
+        return self.output
