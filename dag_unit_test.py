@@ -11,7 +11,7 @@ from pdb import set_trace as st
 ############
 
 # dictionaries used for testing
-from dag_test_data_3 import dag_dict, pathExists_dict, pathExists_supported_dict, pathExists_unsupported_dict, supported_node_connections, unsupported_node_connections, subgraphs_list
+from dag_test_data_1 import dag_dict, pathExists_dict, pathExists_supported_dict, pathExists_unsupported_dict, supported_node_connections, unsupported_node_connections, subgraphs_list
 
 ################
 # End user Input
@@ -39,11 +39,13 @@ class dagUnitTest(unittest.TestCase):
         test_isPartitioned
         test_nodeConnections
         test_partition
+        test_getSubgraphs
+        test_setSubgraphs
         test_merge
 
         nodeAttrsCompare: Compares dagNode object's attributes with truth provided by dictionary
         separateNodes: return two dictionaries containing all supported and all unsupported nodes respectively
-        dagNodesEqual: determines if two dagNode objects have same values for all attributes
+        dagNodesEqual: determine if two dagNode objects have same values for all attributes
 
     """
 
@@ -53,7 +55,7 @@ class dagUnitTest(unittest.TestCase):
         dag = DAG(dag_dict)
 
         # check each dagNode object in DAG object
-        # if the returned nodes match those in the test dicitionary getNodes is returning the correct nodes
+        # if the returned nodes match those in the test dicitionary, then getNodes is returning the correct nodes
         self.nodeAttrsCompare(dag,dag_dict)
         
     def test_setNode(self):
@@ -68,7 +70,7 @@ class dagUnitTest(unittest.TestCase):
         dag.setNode(dag_node)
 
         # check each dagNode object in DAG object
-        # if the returned nodes match those in the test dicitionary getNodes is returning the correct nodes
+        # if the returned nodes match those in the test dicitionary, then getNodes is returning the correct nodes
         self.nodeAttrsCompare(dag,dag_dict)
 
     def test_pathExists(self):
@@ -105,7 +107,7 @@ class dagUnitTest(unittest.TestCase):
         # DAG object initialized by test dictionary
         dag = DAG(dag_dict)
 
-        # test initilization of self.partitioned to False
+        # test initilization of partitioned to False
         self.assertFalse(dag.isPartitioned())
 
     def test_nodeConnections(self):
@@ -132,12 +134,8 @@ class dagUnitTest(unittest.TestCase):
         # test isPartitioned is True
         self.assertTrue(dag1.isPartitioned())
 
-        # test isPartitioned is working correctly
-        self.assertEqual(dag1.partitioned,dag1.isPartitioned())
-
         # If correctly partitioned, keys in each partitioned subgraph should match those in subgraphs_list
-        # Each time a correct match is make between the names of nodes in a subgraph and an element of subgraphs_list
-        # that element is removed from subgraphs_list
+        # Each time a correct match is made the corresponding element is removed from subgraphs_list
         for subgraph in dag1.subgraphs:
 
             subgraph_name_set = set(subgraph.getNodes().keys())
@@ -149,10 +147,11 @@ class dagUnitTest(unittest.TestCase):
                 for subgraph_name in subgraph_name_set:
 
                     # ensure key,value pairs in subgraphs in dag1 match those in dag2
-                    # this is to ensure the key,value pairs were not mixed up during partition
+                    # this is to ensure the key,value pairs were not mixed up during partitioning
                     self.dagNodesEqual(subgraph.getNodes()[subgraph_name],dag2.getNodes()[subgraph_name])
                     
-        #self.assertEqual(subgraphs_list,[])
+        self.assertEqual(subgraphs_list,[])
+        self.assertEqual(dag1.nodes,{})
 
     def test_getSubgraphs(self):
         
@@ -165,28 +164,44 @@ class dagUnitTest(unittest.TestCase):
         # getSubgraphs is working correcctly
         self.assertEqual(dag.getSubgraphs(),dag.subgraphs)
 
+    def test_setSubgraphs(self):
+        
+        # DAG object initialized with no nodes
+        dag = DAG()
+
+        # create subgraphs
+        subgraph1 = DAG(dict((k, dag_dict[k]) for k in ('A','B')))
+        subgraph2 = DAG(dict((k, dag_dict[k]) for k in ('C','D','E')))
+        subgraph3 = DAG(dict((k, dag_dict[k]) for k in ('F')))
+
+        # set subgraphs
+        subgraph_list = [subgraph1,subgraph2,subgraph3]
+        dag.setSubgraphs(subgraph_list)
+
+        # check each subgraph
+        for index,subgraph in enumerate(dag.subgraphs):
+
+            self.assertEqual(subgraph,subgraph_list[index])
+        
     def test_merge(self):
         
         # Two identical DAG objects initialized by test dictionary
         dag1 = DAG(dag_dict)
         dag2 = DAG(dag_dict)
         
-        # partition
+        # partition dag1
         dag1.partition()
         
-        # merge
+        # merge dag1
         dag1.merge()
 
         # isPartitioned is False
         self.assertFalse(dag1.isPartitioned())
-        
-        # isPartitioned is working correctly
-        self.assertEqual(dag1.partitioned,dag1.isPartitioned())
-        
+                
         # subgraphs is empty list
         self.assertEqual(dag1.subgraphs,[])
 
-        # if merger was correct done dag1 and dag2 should have equal node-by-node comparision
+        # if merger was correctly done dag1 and dag2 should have equal node-by-node comparision
         for node_name in dag1.getNodes().keys():
 
             self.dagNodesEqual(dag1.getNodes()[node_name],dag2.getNodes()[node_name])
@@ -194,7 +209,7 @@ class dagUnitTest(unittest.TestCase):
     def nodeAttrsCompare(self,dagObj,test_dict):
 
         # check each dagNode object in DAG object
-        # if the returned nodes match those in the test dicitionary getNodes is returning the correct nodes
+        # if the returned nodes match those in the test dicitionary, then getNodes is returning the correct nodes
         for node_name, node_obj in dagObj.getNodes().items():
 
             # check attributes of each node with truth
